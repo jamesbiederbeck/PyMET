@@ -1,14 +1,14 @@
 """repsresentation of arrivals"""
 
-from base import Trimet
+from .base import Trimet
 
 
 class Arrivals(Trimet):
     """arrival times and location attrs"""
-    command_name = u'arrivals'
+    command_name = 'arrivals'
     arg_schema = ['locIDs']
-    result_schema = [u'errorMessage', u'location',
-                     u'arrival', u'routeStatus']
+    result_schema = ['errorMessage', 'location',
+                     'arrival', 'routeStatus']
 
     def load(self, locations):
         """takes a list of location ids"""
@@ -16,14 +16,14 @@ class Arrivals(Trimet):
             assert isinstance(locations, list)
             super(Arrivals, self).load({'locIDs': locations})
         except AssertionError:
-            print "Locations must be a list"
+            print("Locations must be a list")
 
 
 class Detours(Trimet):
     """Detour information per route"""
-    command_name = u'detours'
-    arg_schema = [u'routes']
-    result_schema = [u'errorMessage', u'detour']
+    command_name = 'detours'
+    arg_schema = ['routes']
+    result_schema = ['errorMessage', 'detour']
 
     def load(self, routes):
         """given a list of routes returns detours"""
@@ -31,18 +31,18 @@ class Detours(Trimet):
             assert isinstance(routes, list)
             super(Detours, self).load({'routes': routes})
         except AssertionError:
-            print "Routes must be a list"
+            print("Routes must be a list")
 
 
 class TripPlanner(Trimet):
     """plan a trip somewhere"""
-    command_name = u'trips/tripplanner'
-    arg_schema = [u'fromPlace', u'fromCoord', u'toPlace', u'toCoord',
-                  u'Date', u'Time', u'Min', u'Arr', u'Walk', u'Mode',
-                  u'Format', u'MaxIntineraries']
-    result_schema = [u'date', u'time', u'request', u'from', u'to',
-                     u'itinerary', u'location', u'fromList',
-                     u'toList', u'error']
+    command_name = 'trips/tripplanner'
+    arg_schema = ['fromPlace', 'fromCoord', 'toPlace', 'toCoord',
+                  'Date', 'Time', 'Min', 'Arr', 'Walk', 'Mode',
+                  'Format', 'MaxIntineraries']
+    result_schema = ['date', 'time', 'request', 'from', 'to',
+                     'itinerary', 'location', 'fromList',
+                     'toList', 'error']
 
     def load(self, fromPlace=None, fromCoord=None, toPlace=None,
              toCoord=None, Date=None, Time=None, Min=None, Arr=None,
@@ -59,13 +59,13 @@ class TripPlanner(Trimet):
 if __name__ == "__main__":
     AR = Arrivals()
     AR.load(locations=[1927])
-    print AR
+    print(AR)
 
     DT = Detours()
     DT.load(routes=[1927, 12963])
-    print DT
+    print(DT)
 
     TP = TripPlanner()
     TP.load(fromPlace='airport', toPlace='pioneer square',
             Time='5:00pm')
-    print TP
+    print(TP)

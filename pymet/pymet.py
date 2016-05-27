@@ -1,6 +1,6 @@
 import gc
 import time
-import urllib
+import urllib.request, urllib.parse, urllib.error
 from optparse import OptionParser
 from xml.etree import ElementTree as ET
 
@@ -26,7 +26,7 @@ def main():
     (options, args) = parser.parse_args()
 
     if not options.stop_num:
-        print "The stop number is missing\n"
+        print("The stop number is missing\n")
         parser.print_help()
         return -1
     else:
@@ -34,7 +34,7 @@ def main():
             stop_num += list([s])
 
             if not options.route_num:
-                print "The route number is missing\n"
+                print("The route number is missing\n")
                 parser.print_help()
                 return -1
             else:
@@ -44,12 +44,12 @@ def main():
         x = 0
         user_url = "http://developer.trimet.org/ws/V1/arrivals/locIDs/" + \
             i + "/appID/" + application_id
-        f = urllib.urlopen(user_url)
+        f = urllib.request.urlopen(user_url)
         elements = ET.XML(f.read())
         subelements = elements.getchildren()
 
         #prints the stop full name and removes from result set
-        print subelements[0].get('desc')
+        print(subelements[0].get('desc'))
         del subelements[0]
 
         #get all of the stops for the route we're taking
@@ -59,20 +59,20 @@ def main():
 
     for things in local_dict:
         if 'status' in things and x is 0:
-            print "Bus " + things.get('status') + " at",
+            print("Bus " + things.get('status') + " at", end=' ')
         if 'estimated' in things:
             arriving_at = time.strftime("%I:%M",
                                         time.localtime(
                     float(things.get('estimated')) / 1000))
-            print arriving_at,
+            print(arriving_at, end=' ')
         elif 'scheduled' in things:
             arriving_at = time.strftime("%I:%M", time.localtime(
                     float(things.get('scheduled')) / 1000))
-            print arriving_at,
+            print(arriving_at, end=' ')
         if x < len(local_dict) - 1:
-            print "and",
+            print("and", end=' ')
         if 'shortSign' in things and x == len(local_dict) - 1:
-            print "for " + things.get('fullSign') + " "
+            print("for " + things.get('fullSign') + " ")
         x += 1
 
 

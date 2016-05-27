@@ -5,7 +5,7 @@ Base classes for Trimet API
 from itertools import chain
 from json import JSONEncoder
 from pprint import PrettyPrinter
-from urllib2 import urlopen
+from urllib.request import urlopen
 
 from BeautifulSoup import BeautifulStoneSoup
 from inflect import engine
@@ -50,7 +50,7 @@ class LazyApi(object):
         """once we have fetched an object we can check for attrs"""
         inflecter = engine()
         items = []
-        for attr in self._attrs.items():
+        for attr in list(self._attrs.items()):
             key, value = attr
             if key == inflecter.sinoun(name) or key == name:
                 if isinstance(value, list):
@@ -99,7 +99,7 @@ class LazyApi(object):
             return attrs
 
         except AssertionError:
-            print "Result schema does not match results"
+            print("Result schema does not match results")
             raise AssertionError
 
 
@@ -107,8 +107,8 @@ class Trimet(LazyApi):
     """Base class for building out specific method classes"""
     appID = "32208AFFFAA63FAEEBE5CB299"
     base_url = "http://developer.trimet.org/ws/V1"
-    _methods = [u"route", u"trips/tripplanner", u"stop",
-                u"arrivals", u"detours"]
+    _methods = ["route", "trips/tripplanner", "stop",
+                "arrivals", "detours"]
     command_name = ''
 
     def __init__(self):
@@ -116,22 +116,22 @@ class Trimet(LazyApi):
             assert self.command_name in self._methods
             super(Trimet, self).__init__()
         except AssertionError:
-            print "You must specify a command method from %s" % (
-                self._methods)
+            print("You must specify a command method from %s" % (
+                self._methods))
             raise AssertionError
 
     def load(self, params):
         """loads data from api into local instance"""
         # validate we have an arg schema and the params match
         assert self.arg_schema
-        assert all(x in  self.arg_schema for x in params.keys())
+        assert all(x in  self.arg_schema for x in list(params.keys()))
 
-        arg_iter = chain([('', self.command_name)], params.items(),
+        arg_iter = chain([('', self.command_name)], list(params.items()),
                          [('appID', self.appID)])
 
         formatted_params = urlize(arg_iter)
         root = self.base_url + formatted_params
-        print root
+        print(root)
         results = fetch(root)
         if results.resultset:
             self._attrs = self.map_schema(results.resultset)

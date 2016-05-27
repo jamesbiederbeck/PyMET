@@ -1,6 +1,6 @@
-PyMet
-=====
+Trimet Watch: A portable python program designed to run on android.
+By James Biederbeck
 
-A python library for talking to the `trimet api`_
+Based on PyMET by dcolish
 
-.. _`trimet api`: http://developer.trimet.org/
+
